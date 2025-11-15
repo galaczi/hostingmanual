@@ -2,12 +2,11 @@ import PocketBase from 'pocketbase';
 import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
-// Initialize PocketBase client
-const PB_URL = browser
-	? (import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090')
-	: 'http://127.0.0.1:8090';
+// Client-side PocketBase instance (for browser)
+export const pb = new PocketBase(browser ? (import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090') : undefined);
 
-export const pb = new PocketBase(PB_URL);
+// Server-side PocketBase instance (for SSR)
+export const pbServer = new PocketBase('http://127.0.0.1:8090');
 
 // Disable auto cancellation
 pb.autoCancellation(false);

@@ -1,10 +1,10 @@
-import { pb, type Post } from '$lib/pocketbase';
+import { pbServer, type Post } from '$lib/pocketbase';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
 	try {
-		const posts = await pb.collection('posts').getList<Post>(1, 6, {
-			filter: pb.filter('published = true'),
+		const posts = await pbServer.collection('posts').getList<Post>(1, 6, {
+			filter: pbServer.filter('published = true'),
 			sort: '-published_at,-created',
 			expand: 'hosting_provider'
 		});
