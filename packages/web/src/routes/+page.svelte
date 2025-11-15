@@ -1,185 +1,89 @@
 <script lang="ts">
-	import { pb, type Post } from '$lib/pocketbase';
-	import { onMount } from 'svelte';
+	import type { PageData } from './$types';
 
-	let featuredPosts = $state<Post[]>([]);
-	let loading = $state(true);
+	let { data }: { data: PageData } = $props();
 
-	onMount(async () => {
-		try {
-			const result = await pb.collection('posts').getList<Post>(1, 6, {
-				filter: 'published = true',
-				sort: '-published_at,-created',
-				expand: 'hosting_provider'
-			});
-			featuredPosts = result.items;
-		} catch (err) {
-			console.error('Error loading posts:', err);
-		} finally {
-			loading = false;
-		}
-	});
+	const featuredPosts = $derived(data.featuredPosts);
 </script>
 
 <!-- Hero section -->
-<div class="relative overflow-hidden bg-white">
-	<!-- Gradient mesh background -->
-	<div class="absolute inset-0 bg-[image:var(--gradient-mesh)]"></div>
-
-	<!-- Animated orbs -->
-	<div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl animate-float"></div>
-	<div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
-
-	<div class="container relative mx-auto px-4 py-24 md:py-32">
-		<div class="mx-auto max-w-4xl text-center">
-			<!-- Badge -->
-			<div class="mb-6 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm font-medium text-gray-700">
-				<span class="flex h-2 w-2">
-					<span class="absolute inline-flex h-2 w-2 animate-ping rounded-full bg-indigo-400 opacity-75"></span>
-					<span class="relative inline-flex h-2 w-2 rounded-full bg-indigo-500"></span>
-				</span>
-				Expert hosting reviews & comparisons
-			</div>
-
-			<h1 class="mb-6 text-5xl font-bold tracking-tight text-gray-900 md:text-7xl text-balance">
-				Find Your Perfect
-				<span class="gradient-text">Web Hosting</span>
+<section class="relative bg-white px-4 py-24 md:py-32">
+	<div class="container mx-auto max-w-5xl">
+		<div class="text-center">
+			<h1 class="mb-6 text-balance">
+				Expert Web Hosting<br />Reviews & Comparisons
 			</h1>
 
-			<p class="mb-10 text-xl text-gray-600 md:text-2xl text-balance">
-				In-depth analysis, honest comparisons and expert opinions<br class="hidden md:block" />
-				to help you make the right choice.
+			<p class="mx-auto mb-12 max-w-2xl text-xl text-muted text-balance">
+				Make informed decisions with our in-depth, unbiased hosting provider reviews.
+				Real testing, real results.
 			</p>
 
-			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
-				<a
-					href="/posts/"
-					class="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 font-semibold text-white shadow-lg shadow-indigo-500/50 transition-all hover:shadow-xl hover:shadow-indigo-500/50 hover:scale-105"
-				>
-					<span class="relative z-10">Browse Reviews</span>
-					<svg class="relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-					</svg>
-					<div class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 transition-opacity group-hover:opacity-100"></div>
+			<div class="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+				<a href="/posts/" class="btn-primary">
+					Browse Reviews
 				</a>
-
-				<a
-					href="#features"
-					class="glass group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold text-gray-700 transition-all hover:shadow-xl hover:scale-105"
-				>
-					Learn More
-					<svg class="h-5 w-5 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-					</svg>
+				<a href="#latest" class="btn-secondary">
+					Latest Articles
 				</a>
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 
-<!-- Features Section -->
-<div id="features" class="bg-gradient-to-b from-white to-gray-50 py-24">
-	<div class="container mx-auto px-4">
-		<div class="mx-auto mb-16 max-w-3xl text-center">
-			<h2 class="mb-4 text-4xl font-bold text-gray-900">Why Trust Our Reviews?</h2>
-			<p class="text-lg text-gray-600">
-				We provide honest, in-depth analysis based on real testing and experience
-			</p>
-		</div>
-
-		<div class="grid gap-8 md:grid-cols-3">
-			<div class="group glass rounded-2xl p-8 transition-all hover:scale-105 hover:shadow-2xl">
-				<div class="mb-4 inline-flex rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-3 text-white">
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-				</div>
-				<h3 class="mb-2 text-xl font-bold text-gray-900">Verified Testing</h3>
-				<p class="text-gray-600">
-					Every hosting provider is personally tested with real websites and workloads
-				</p>
+<!-- Stats/Social Proof -->
+<section class="border-y border-gray-200 bg-gray-50 px-4 py-12">
+	<div class="container mx-auto max-w-5xl">
+		<div class="grid grid-cols-3 gap-8 text-center">
+			<div>
+				<div class="mb-1 text-3xl font-semibold">50+</div>
+				<div class="text-sm text-muted">Providers Reviewed</div>
 			</div>
-
-			<div class="group glass rounded-2xl p-8 transition-all hover:scale-105 hover:shadow-2xl">
-				<div class="mb-4 inline-flex rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 p-3 text-white">
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-					</svg>
-				</div>
-				<h3 class="mb-2 text-xl font-bold text-gray-900">Performance Metrics</h3>
-				<p class="text-gray-600">
-					Detailed speed tests, uptime monitoring, and real-world performance data
-				</p>
+			<div>
+				<div class="mb-1 text-3xl font-semibold">100%</div>
+				<div class="text-sm text-muted">Unbiased Testing</div>
 			</div>
-
-			<div class="group glass rounded-2xl p-8 transition-all hover:scale-105 hover:shadow-2xl">
-				<div class="mb-4 inline-flex rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 p-3 text-white">
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-				</div>
-				<h3 class="mb-2 text-xl font-bold text-gray-900">Value Analysis</h3>
-				<p class="text-gray-600">
-					Transparent pricing breakdowns and feature comparisons to maximize value
-				</p>
+			<div>
+				<div class="mb-1 text-3xl font-semibold">24/7</div>
+				<div class="text-sm text-muted">Uptime Monitoring</div>
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 
 <!-- Featured posts -->
-<div class="bg-gray-50 py-24">
-	<div class="container mx-auto px-4">
+<section id="latest" class="bg-white px-4 py-24">
+	<div class="container mx-auto max-w-6xl">
 		<div class="mb-16 flex items-end justify-between">
 			<div>
-				<h2 class="mb-2 text-4xl font-bold text-gray-900">Latest Reviews</h2>
-				<p class="text-lg text-gray-600">Fresh insights and updated comparisons</p>
+				<h2 class="mb-2">Latest Reviews</h2>
+				<p class="text-lg text-muted">Fresh insights from real-world testing</p>
 			</div>
-			<a href="/posts/" class="group inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-700">
-				<span class="font-semibold">View all</span>
-				<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-				</svg>
+			<a href="/posts/" class="hidden text-sm font-medium text-gray-900 hover:text-accent sm:block">
+				View all →
 			</a>
 		</div>
 
-		{#if loading}
-			<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-				{#each Array(6) as _}
-					<div class="glass animate-pulse rounded-2xl p-6">
-						<div class="mb-4 h-48 rounded-xl bg-gray-200"></div>
-						<div class="mb-2 h-4 w-3/4 rounded bg-gray-200"></div>
-						<div class="h-4 w-1/2 rounded bg-gray-200"></div>
-					</div>
-				{/each}
-			</div>
-		{:else if featuredPosts.length === 0}
-			<div class="glass rounded-2xl p-16 text-center">
-				<div class="mx-auto mb-4 inline-flex rounded-full bg-indigo-100 p-4">
-					<svg class="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-					</svg>
-				</div>
-				<h3 class="mb-2 text-xl font-bold text-gray-900">Coming Soon</h3>
-				<p class="text-gray-600">First articles on the way!</p>
+		{#if featuredPosts.length === 0}
+			<div class="card p-16 text-center">
+				<p class="text-muted">No articles yet. Check back soon!</p>
 			</div>
 		{:else}
 			<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{#each featuredPosts as post}
-					<article class="group glass rounded-2xl overflow-hidden transition-all hover:scale-105 hover:shadow-2xl">
+					<article class="card-hover group">
 						{#if post.featured_image}
-							<div class="relative overflow-hidden">
+							<div class="overflow-hidden rounded-t-xl">
 								<img
 									src={post.featured_image}
 									alt={post.title}
-									class="h-48 w-full object-cover transition-transform group-hover:scale-110"
+									class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
 								/>
-								<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
 							</div>
 						{/if}
 						<div class="p-6">
-							<div class="mb-3 flex items-center gap-2">
-								<span class="rounded-full bg-gradient-to-r from-indigo-500 to-purple-500 px-3 py-1 text-xs font-semibold text-white">
+							<div class="mb-3 flex items-center gap-3 text-sm">
+								<span class="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-700">
 									{post.category}
 								</span>
 								{#if post.rating}
@@ -189,28 +93,28 @@
 												d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
 											/>
 										</svg>
-										<span class="text-sm font-semibold text-gray-900">{post.rating.toFixed(1)}</span>
+										<span class="font-semibold text-gray-900">{post.rating.toFixed(1)}</span>
 									</div>
 								{/if}
 							</div>
 
-							<h3 class="mb-2 text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+							<h3 class="mb-2 font-semibold text-gray-900 group-hover:text-accent transition-colors">
 								<a href="/posts/{post.slug}/" class="text-balance">
 									{post.title}
 								</a>
 							</h3>
 
 							{#if post.excerpt}
-								<p class="mb-4 text-gray-600 line-clamp-2">{post.excerpt}</p>
+								<p class="mb-4 text-sm text-muted line-clamp-2">{post.excerpt}</p>
 							{/if}
 
 							<a
 								href="/posts/{post.slug}/"
-								class="group/link inline-flex items-center gap-2 font-semibold text-indigo-600 hover:text-indigo-700"
+								class="inline-flex items-center text-sm font-medium text-gray-900 hover:text-accent transition-colors"
 							>
-								<span>Read More</span>
-								<svg class="h-4 w-4 transition-transform group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+								Read review
+								<svg class="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
 								</svg>
 							</a>
 						</div>
@@ -219,41 +123,65 @@
 			</div>
 		{/if}
 	</div>
-</div>
+</section>
 
-<!-- CTA Section -->
-<div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 py-24">
-	<!-- Animated background -->
-	<div class="absolute inset-0 bg-[image:var(--gradient-mesh)] opacity-30"></div>
-	<div class="absolute inset-0 bg-grid-white/10"></div>
+<!-- How We Test -->
+<section class="border-t border-gray-200 bg-gray-50 px-4 py-24">
+	<div class="container mx-auto max-w-5xl">
+		<div class="mb-16 text-center">
+			<h2 class="mb-4">Our Testing Process</h2>
+			<p class="text-lg text-muted">Transparent methodology, real results</p>
+		</div>
 
-	<div class="container relative mx-auto px-4">
-		<div class="mx-auto max-w-3xl text-center text-white">
-			<h2 class="mb-4 text-4xl font-bold md:text-5xl text-balance">
-				Ready to Find Your Perfect Hosting?
-			</h2>
-			<p class="mb-10 text-xl text-indigo-100 text-balance">
-				Join thousands of users who found their ideal hosting provider through our expert reviews
-			</p>
-
-			<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
-				<a
-					href="/posts/"
-					class="glass-dark group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 font-semibold text-white transition-all hover:scale-105"
-				>
-					<span>Explore Reviews</span>
-					<svg class="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+		<div class="grid gap-12 md:grid-cols-3">
+			<div>
+				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-900 text-white">
+					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
 					</svg>
-				</a>
+				</div>
+				<h3 class="mb-2 text-xl font-semibold">Real Testing</h3>
+				<p class="text-muted">
+					Every host is tested with actual websites and workloads over extended periods.
+				</p>
+			</div>
 
-				<a
-					href="/admin/"
-					class="group inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/30 bg-white/10 px-8 py-4 font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20 hover:scale-105"
-				>
-					Admin
-				</a>
+			<div>
+				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-900 text-white">
+					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+					</svg>
+				</div>
+				<h3 class="mb-2 text-xl font-semibold">Performance Data</h3>
+				<p class="text-muted">
+					Detailed metrics on speed, uptime, and reliability from our monitoring tools.
+				</p>
+			</div>
+
+			<div>
+				<div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gray-900 text-white">
+					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+					</svg>
+				</div>
+				<h3 class="mb-2 text-xl font-semibold">Value Analysis</h3>
+				<p class="text-muted">
+					Honest pricing breakdowns with feature comparisons to help you decide.
+				</p>
 			</div>
 		</div>
 	</div>
-</div>
+</section>
+
+<!-- CTA -->
+<section class="bg-white px-4 py-24">
+	<div class="container mx-auto max-w-3xl text-center">
+		<h2 class="mb-4">Find Your Perfect Host</h2>
+		<p class="mb-10 text-xl text-muted text-balance">
+			Browse our comprehensive reviews and make an informed decision
+		</p>
+		<a href="/posts/" class="btn-primary">
+			View All Reviews
+		</a>
+	</div>
+</section>

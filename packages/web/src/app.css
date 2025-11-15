@@ -4,74 +4,87 @@
 
 @layer base {
 	:root {
-		--color-primary: 99 102 241;
-		--color-secondary: 147 51 234;
-		--color-accent: 236 72 153;
-
-		--gradient-primary: linear-gradient(135deg, rgb(99 102 241) 0%, rgb(147 51 234) 100%);
-		--gradient-secondary: linear-gradient(135deg, rgb(147 51 234) 0%, rgb(236 72 153) 100%);
-		--gradient-mesh: radial-gradient(at 40% 20%, rgb(99 102 241 / 0.3) 0px, transparent 50%),
-			radial-gradient(at 80% 0%, rgb(147 51 234 / 0.3) 0px, transparent 50%),
-			radial-gradient(at 0% 50%, rgb(236 72 153 / 0.3) 0px, transparent 50%);
-	}
-
-	* {
-		@apply border-gray-200/60;
+		/* Single accent color - refined blue */
+		--color-accent: 37 99 235; /* blue-600 */
 	}
 
 	html {
 		@apply scroll-smooth antialiased;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 
 	body {
 		@apply bg-white text-gray-900;
 		font-feature-settings: 'rlig' 1, 'calt' 1;
 	}
+
+	/* Professional typography scale */
+	h1, h2, h3, h4, h5, h6 {
+		@apply font-semibold tracking-tight;
+	}
+
+	h1 {
+		@apply text-4xl md:text-5xl lg:text-6xl;
+		letter-spacing: -0.02em;
+	}
+
+	h2 {
+		@apply text-3xl md:text-4xl;
+		letter-spacing: -0.01em;
+	}
+
+	h3 {
+		@apply text-2xl md:text-3xl;
+	}
 }
 
 @layer utilities {
-	.glass {
-		@apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl shadow-gray-900/5;
+	/* Subtle card with proper shadow */
+	.card {
+		@apply bg-white rounded-xl border border-gray-200 shadow-sm;
+		box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.02), 0 1px 2px -1px rgb(0 0 0 / 0.02);
 	}
 
-	.glass-dark {
-		@apply bg-gray-900/80 backdrop-blur-xl border border-white/10 shadow-xl shadow-gray-900/20;
+	.card-hover {
+		@apply card transition-all duration-200;
 	}
 
-	.gradient-text {
-		@apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500;
+	.card-hover:hover {
+		@apply shadow-lg border-gray-300;
+		box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.04), 0 8px 10px -6px rgb(0 0 0 / 0.04);
 	}
 
-	.shine {
-		position: relative;
-		overflow: hidden;
+	/* Button variants */
+	.btn-primary {
+		@apply bg-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200;
+		@apply hover:bg-gray-800 active:scale-95;
 	}
 
-	.shine::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: -100%;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-		transition: left 0.5s;
+	.btn-secondary {
+		@apply bg-white text-gray-900 px-6 py-3 rounded-lg font-medium border border-gray-300 transition-all duration-200;
+		@apply hover:bg-gray-50 hover:border-gray-400 active:scale-95;
 	}
 
-	.shine:hover::before {
-		left: 100%;
-	}
-
-	.animate-float {
-		animation: float 6s ease-in-out infinite;
-	}
-
-	@keyframes float {
-		0%, 100% { transform: translateY(0px); }
-		50% { transform: translateY(-20px); }
-	}
-
+	/* Text utilities */
 	.text-balance {
 		text-wrap: balance;
+	}
+
+	.text-muted {
+		@apply text-gray-600;
+	}
+
+	/* Accent color utilities */
+	.text-accent {
+		color: rgb(var(--color-accent));
+	}
+
+	.bg-accent {
+		background-color: rgb(var(--color-accent));
+	}
+
+	.border-accent {
+		border-color: rgb(var(--color-accent));
 	}
 }
