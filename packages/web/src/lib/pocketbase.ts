@@ -3,7 +3,11 @@ import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
 // Initialize PocketBase client
-export const pb = new PocketBase(browser ? window.location.origin : 'http://127.0.0.1:8090');
+const PB_URL = browser
+	? (import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090')
+	: 'http://127.0.0.1:8090';
+
+export const pb = new PocketBase(PB_URL);
 
 // Disable auto cancellation
 pb.autoCancellation(false);
