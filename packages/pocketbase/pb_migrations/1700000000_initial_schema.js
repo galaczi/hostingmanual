@@ -1,94 +1,75 @@
 /// <reference path="../pb_data/types.d.ts" />
-migrate((db) => {
+migrate((app) => {
   // Pages collection - for static pages and articles
   const pagesCollection = new Collection({
-    id: 'pages_collection_id',
     name: 'pages',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'title',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255
-        }
+        min: 1,
+        max: 255
       },
       {
         name: 'slug',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255,
-          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
-        }
+        min: 1,
+        max: 255,
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
       },
       {
         name: 'content',
         type: 'json',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'excerpt',
         type: 'text',
         required: false,
-        options: {
-          max: 500
-        }
+        max: 500
       },
       {
         name: 'featured_image',
         type: 'file',
         required: false,
-        options: {
-          maxSelect: 1,
-          maxSize: 5242880,
-          mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
-        }
+        maxSelect: 1,
+        maxSize: 5242880,
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
       },
       {
         name: 'meta_title',
         type: 'text',
         required: false,
-        options: {
-          max: 60
-        }
+        max: 60
       },
       {
         name: 'meta_description',
         type: 'text',
         required: false,
-        options: {
-          max: 160
-        }
+        max: 160
       },
       {
         name: 'published',
         type: 'bool',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'published_at',
         type: 'date',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'author',
         type: 'relation',
         required: true,
-        options: {
-          collectionId: '_pb_users_auth_',
-          cascadeDelete: false,
-          minSelect: null,
-          maxSelect: 1,
-          displayFields: ['email', 'name']
-        }
+        collectionId: '_pb_users_auth_',
+        cascadeDelete: false,
+        minSelect: null,
+        maxSelect: 1,
+        displayFields: ['email', 'name']
       }
     ],
     indexes: [
@@ -103,112 +84,90 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(pagesCollection);
+  app.save(pagesCollection);
 
   // Hosting providers collection
   const providersCollection = new Collection({
-    id: 'providers_collection_id',
     name: 'hosting_providers',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'name',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255
-        }
+        min: 1,
+        max: 255
       },
       {
         name: 'slug',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255,
-          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
-        }
+        min: 1,
+        max: 255,
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
       },
       {
         name: 'logo',
         type: 'file',
         required: false,
-        options: {
-          maxSelect: 1,
-          maxSize: 2097152,
-          mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
-        }
+        maxSelect: 1,
+        maxSize: 2097152,
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
       },
       {
         name: 'website',
         type: 'url',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'affiliate_link',
         type: 'url',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'description',
         type: 'text',
         required: false,
-        options: {
-          max: 1000
-        }
+        max: 1000
       },
       {
         name: 'overall_rating',
         type: 'number',
         required: false,
-        options: {
-          min: 0,
-          max: 5
-        }
+        min: 0,
+        max: 5
       },
       {
         name: 'pricing_start',
         type: 'number',
         required: false,
-        options: {
-          min: 0
-        }
+        min: 0
       },
       {
         name: 'pricing_currency',
         type: 'text',
         required: false,
-        options: {
-          max: 3
-        }
+        max: 3
       },
       {
         name: 'features',
         type: 'json',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'pros',
         type: 'json',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'cons',
         type: 'json',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'active',
         type: 'bool',
-        required: true,
-        options: {}
+        required: true
       }
     ],
     indexes: [
@@ -223,133 +182,107 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(providersCollection);
+  app.save(providersCollection);
 
   // Posts/Reviews collection
   const postsCollection = new Collection({
-    id: 'posts_collection_id',
     name: 'posts',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'title',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255
-        }
+        min: 1,
+        max: 255
       },
       {
         name: 'slug',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255,
-          pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
-        }
+        min: 1,
+        max: 255,
+        pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$'
       },
       {
         name: 'content',
         type: 'json',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'excerpt',
         type: 'text',
         required: false,
-        options: {
-          max: 500
-        }
+        max: 500
       },
       {
         name: 'featured_image',
         type: 'file',
         required: false,
-        options: {
-          maxSelect: 1,
-          maxSize: 5242880,
-          mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
-        }
+        maxSelect: 1,
+        maxSize: 5242880,
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
       },
       {
         name: 'category',
         type: 'select',
         required: true,
-        options: {
-          maxSelect: 1,
-          values: ['review', 'comparison', 'guide', 'news', 'tutorial']
-        }
+        maxSelect: 1,
+        values: ['review', 'comparison', 'guide', 'news', 'tutorial']
       },
       {
         name: 'tags',
         type: 'json',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'hosting_provider',
         type: 'relation',
         required: false,
-        options: {
-          collectionId: 'providers_collection_id',
-          cascadeDelete: false,
-          minSelect: null,
-          maxSelect: 1,
-          displayFields: ['name']
-        }
+        collectionId: providersCollection.id,
+        cascadeDelete: false,
+        minSelect: null,
+        maxSelect: 1,
+        displayFields: ['name']
       },
       {
         name: 'rating',
         type: 'number',
         required: false,
-        options: {
-          min: 0,
-          max: 5
-        }
+        min: 0,
+        max: 5
       },
       {
         name: 'meta_title',
         type: 'text',
         required: false,
-        options: {
-          max: 60
-        }
+        max: 60
       },
       {
         name: 'meta_description',
         type: 'text',
         required: false,
-        options: {
-          max: 160
-        }
+        max: 160
       },
       {
         name: 'published',
         type: 'bool',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'published_at',
         type: 'date',
-        required: false,
-        options: {}
+        required: false
       },
       {
         name: 'author',
         type: 'relation',
         required: true,
-        options: {
-          collectionId: '_pb_users_auth_',
-          cascadeDelete: false,
-          minSelect: null,
-          maxSelect: 1,
-          displayFields: ['email', 'name']
-        }
+        collectionId: '_pb_users_auth_',
+        cascadeDelete: false,
+        minSelect: null,
+        maxSelect: 1,
+        displayFields: ['email', 'name']
       }
     ],
     indexes: [
@@ -365,69 +298,58 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(postsCollection);
+  app.save(postsCollection);
 
   // Component templates collection - for reusable editor components
   const componentsCollection = new Collection({
-    id: 'components_collection_id',
     name: 'component_templates',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'name',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255
-        }
+        min: 1,
+        max: 255
       },
       {
         name: 'type',
         type: 'select',
         required: true,
-        options: {
-          maxSelect: 1,
-          values: [
-            'rating_card',
-            'comparison_table',
-            'pros_cons',
-            'feature_list',
-            'pricing_table',
-            'call_to_action',
-            'testimonial',
-            'alert',
-            'code_block',
-            'faq'
-          ]
-        }
+        maxSelect: 1,
+        values: [
+          'rating_card',
+          'comparison_table',
+          'pros_cons',
+          'feature_list',
+          'pricing_table',
+          'call_to_action',
+          'testimonial',
+          'alert',
+          'code_block',
+          'faq'
+        ]
       },
       {
         name: 'description',
         type: 'text',
         required: false,
-        options: {
-          max: 500
-        }
+        max: 500
       },
       {
         name: 'default_data',
         type: 'json',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'schema',
         type: 'json',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'active',
         type: 'bool',
-        required: true,
-        options: {}
+        required: true
       }
     ],
     indexes: [
@@ -441,76 +363,62 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(componentsCollection);
+  app.save(componentsCollection);
 
   // Media library collection
   const mediaCollection = new Collection({
-    id: 'media_collection_id',
     name: 'media',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'title',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255
-        }
+        min: 1,
+        max: 255
       },
       {
         name: 'file',
         type: 'file',
         required: true,
-        options: {
-          maxSelect: 1,
-          maxSize: 10485760,
-          mimeTypes: [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'image/svg+xml',
-            'image/gif'
-          ]
-        }
+        maxSelect: 1,
+        maxSize: 10485760,
+        mimeTypes: [
+          'image/jpeg',
+          'image/png',
+          'image/webp',
+          'image/svg+xml',
+          'image/gif'
+        ]
       },
       {
         name: 'alt_text',
         type: 'text',
         required: false,
-        options: {
-          max: 255
-        }
+        max: 255
       },
       {
         name: 'caption',
         type: 'text',
         required: false,
-        options: {
-          max: 500
-        }
+        max: 500
       },
       {
         name: 'type',
         type: 'select',
         required: true,
-        options: {
-          maxSelect: 1,
-          values: ['image', 'icon', 'logo', 'screenshot']
-        }
+        maxSelect: 1,
+        values: ['image', 'icon', 'logo', 'screenshot']
       },
       {
         name: 'uploaded_by',
         type: 'relation',
         required: true,
-        options: {
-          collectionId: '_pb_users_auth_',
-          cascadeDelete: false,
-          minSelect: null,
-          maxSelect: 1,
-          displayFields: ['email', 'name']
-        }
+        collectionId: '_pb_users_auth_',
+        cascadeDelete: false,
+        minSelect: null,
+        maxSelect: 1,
+        displayFields: ['email', 'name']
       }
     ],
     indexes: [
@@ -523,38 +431,31 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(mediaCollection);
+  app.save(mediaCollection);
 
   // Site settings collection
   const settingsCollection = new Collection({
-    id: 'settings_collection_id',
     name: 'site_settings',
     type: 'base',
-    system: false,
-    schema: [
+    fields: [
       {
         name: 'key',
         type: 'text',
         required: true,
-        options: {
-          min: 1,
-          max: 255,
-          pattern: '^[a-z0-9_]+$'
-        }
+        min: 1,
+        max: 255,
+        pattern: '^[a-z0-9_]+$'
       },
       {
         name: 'value',
         type: 'json',
-        required: true,
-        options: {}
+        required: true
       },
       {
         name: 'description',
         type: 'text',
         required: false,
-        options: {
-          max: 500
-        }
+        max: 500
       }
     ],
     indexes: [
@@ -567,10 +468,8 @@ migrate((db) => {
     deleteRule: '@request.auth.id != ""'
   });
 
-  db.saveCollection(settingsCollection);
-
-  return true;
-}, (db) => {
+  app.save(settingsCollection);
+}, (app) => {
   // Rollback
   const collections = [
     'pages',
@@ -583,12 +482,10 @@ migrate((db) => {
 
   collections.forEach(collectionName => {
     try {
-      const collection = db.findCollectionByNameOrId(collectionName);
-      db.deleteCollection(collection);
+      const collection = app.findCollectionByNameOrId(collectionName);
+      app.delete(collection);
     } catch (e) {
       // Collection might not exist
     }
   });
-
-  return true;
 });

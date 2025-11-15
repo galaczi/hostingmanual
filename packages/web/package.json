@@ -37,6 +37,6 @@
 		"@tiptap/pm": "^2.1.13",
 		"@tiptap/starter-kit": "^2.1.13",
 		"pocketbase": "^0.21.3",
-		"svelte-meta-tags": "^3.1.4"
+		"svelte-meta-tags": "^4.5.0"
 	}
 }
