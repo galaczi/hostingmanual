@@ -1,4 +1,4 @@
-import { pbServer, type Post } from '$lib/pocketbase';
+import { pb, type Post } from '$lib/server/pocketbase';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -12,10 +12,10 @@ export const load: PageServerLoad = async ({ url }) => {
 		let filter = 'published = true';
 
 		if (category) {
-			filter = pbServer.filter(filter + ' && category = {:category}', { category });
+			filter = pb.filter(filter + ' && category = {:category}', { category });
 		}
 
-		const posts = await pbServer.collection('posts').getList<Post>(page, perPage, {
+		const posts = await pb.collection('posts').getList<Post>(page, perPage, {
 			filter,
 			sort: '-published_at,-created',
 			expand: 'hosting_provider'

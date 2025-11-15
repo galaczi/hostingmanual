@@ -1,4 +1,4 @@
-import { pb, type Post } from '$lib/pocketbase';
+import { pb, type Post } from '$lib/server/pocketbase';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 

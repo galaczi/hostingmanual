@@ -1,36 +1,7 @@
 import PocketBase from 'pocketbase';
-import { browser } from '$app/environment';
 
-// Client-side PocketBase instance (for browser only)
-export const pb = new PocketBase(browser ? (import.meta.env.VITE_PB_URL || 'http://127.0.0.1:8090') : undefined);
-
-// Disable auto cancellation
-if (browser) {
-	pb.autoCancellation(false);
-}
-
-// Svelte 5 reactive state for current user
-let currentUserState = $state(pb.authStore.model);
-
-// Listen to auth store changes
-if (browser) {
-	pb.authStore.onChange((token, model) => {
-		currentUserState = model;
-	});
-}
-
-export const currentUser = {
-	get value() {
-		return currentUserState;
-	},
-	get isAuthenticated() {
-		return pb.authStore.isValid;
-	},
-	logout() {
-		pb.authStore.clear();
-		currentUserState = null;
-	}
-};
+// Server-side PocketBase instance (for SSR only)
+export const pb = new PocketBase('http://127.0.0.1:8090');
 
 // Type definitions for collections
 export interface Page {
@@ -129,15 +100,4 @@ export interface SiteSetting {
 	description?: string;
 	created: string;
 	updated: string;
-}
-
-// Helper function to get file URL
-export function getFileUrl(record: any, filename: string): string {
-	return pb.files.getUrl(record, filename);
-}
-
-// Helper function to check if user is admin
-export function isAdmin(): boolean {
-	const user = pb.authStore.model;
-	return user !== null && user !== undefined;
 }
